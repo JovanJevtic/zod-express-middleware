@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { z, ZodEffects, ZodError, ZodSchema, ZodType, ZodTypeDef } from 'zod';
+import { ZodEffects, ZodError, ZodSchema, ZodType, ZodTypeDef, z } from 'zod';
 
 type NonReadOnly<T> = { -readonly [P in keyof T]: NonReadOnly<T[P]> };
 
@@ -48,10 +48,14 @@ export declare type TypedRequestQuery<TQuery extends ZodType<any, ZodTypeDef, an
 type ErrorListItem = { type: 'Query' | 'Params' | 'Body'; errors: ZodError<any> };
 
 export const sendErrors: (errors: Array<ErrorListItem>, res: Response) => void = (errors, res) => {
-  return res.status(400).send(errors.map((error) => ({ type: error.type, errors: error.errors })));
+  res.status(400)
+    throw new Error("Error with request object");
+    return
 };
 export const sendError: (error: ErrorListItem, res: Response) => void = (error, res) => {
-  return res.status(400).send({ type: error.type, errors: error.errors });
+  res.status(400)
+    throw new Error("Error with request object");
+    return
 };
 
 export function processRequestBody<TBody>(effects: ZodSchema<TBody>): RequestHandler<ParamsDictionary, any, TBody, any>;
