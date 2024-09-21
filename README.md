@@ -1,4 +1,4 @@
-# zod-express-middleware
+# zod-express-middleware-jovan
 Middleware for [express](https://www.npmjs.com/package/express) that uses [zod](https://www.npmjs.com/package/zod) to make requests type-safe.
 
 <a href="https://www.npmjs.com/package/zod-express-middleware" rel="nofollow"><img alt="npm" src="https://img.shields.io/npm/v/zod-express-middleware"></a>
