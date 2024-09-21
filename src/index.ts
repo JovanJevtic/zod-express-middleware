@@ -48,14 +48,34 @@ export declare type TypedRequestQuery<TQuery extends ZodType<any, ZodTypeDef, an
 type ErrorListItem = { type: 'Query' | 'Params' | 'Body'; errors: ZodError<any> };
 
 export const sendErrors: (errors: Array<ErrorListItem>, res: Response) => void = (errors, res) => {
-  res.status(400)
-    throw new Error("Error with request object");
+  if (process.NODE_ENV === "dev") {
+    const errorMessage = JSON.stringify({
+      status: "fail",
+      errors: errors
+    });
+
+    res.status(400)
+    throw new Error(errorMessage);
     return
+  } else {
+    res.status(400)
+    throw new Error("Error with request object!");
+  }
 };
 export const sendError: (error: ErrorListItem, res: Response) => void = (error, res) => {
-  res.status(400)
-    throw new Error("Error with request object");
+  if (process.NODE_ENV === "dev") {
+    const errorMessage = JSON.stringify({
+      status: "fail",
+      errors: error
+    });
+
+    res.status(400)
+    throw new Error(errorMessage);
     return
+  } else {
+    res.status(400)
+    throw new Error("Error with request object!");
+  }
 };
 
 export function processRequestBody<TBody>(effects: ZodSchema<TBody>): RequestHandler<ParamsDictionary, any, TBody, any>;
@@ -192,28 +212,28 @@ export const validateRequest: <TParams = any, TQuery = any, TBody = any>(
   schemas: RequestValidation<TParams, TQuery, TBody>,
 ) => RequestHandler<TParams, any, TBody, TQuery> =
   ({ params, query, body }) =>
-  (req, res, next) => {
-    const errors: Array<ErrorListItem> = [];
-    if (params) {
-      const parsed = params.safeParse(req.params);
-      if (!parsed.success) {
-        errors.push({ type: 'Params', errors: parsed.error });
+    (req, res, next) => {
+      const errors: Array<ErrorListItem> = [];
+      if (params) {
+        const parsed = params.safeParse(req.params);
+        if (!parsed.success) {
+          errors.push({ type: 'Params', errors: parsed.error });
+        }
       }
-    }
-    if (query) {
-      const parsed = query.safeParse(req.query);
-      if (!parsed.success) {
-        errors.push({ type: 'Query', errors: parsed.error });
+      if (query) {
+        const parsed = query.safeParse(req.query);
+        if (!parsed.success) {
+          errors.push({ type: 'Query', errors: parsed.error });
+        }
       }
-    }
-    if (body) {
-      const parsed = body.safeParse(req.body);
-      if (!parsed.success) {
-        errors.push({ type: 'Body', errors: parsed.error });
+      if (body) {
+        const parsed = body.safeParse(req.body);
+        if (!parsed.success) {
+          errors.push({ type: 'Body', errors: parsed.error });
+        }
       }
-    }
-    if (errors.length > 0) {
-      return sendErrors(errors, res);
-    }
-    return next();
-  };
+      if (errors.length > 0) {
+        return sendErrors(errors, res);
+      }
+      return next();
+    };
