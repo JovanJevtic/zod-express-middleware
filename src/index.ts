@@ -48,7 +48,7 @@ export declare type TypedRequestQuery<TQuery extends ZodType<any, ZodTypeDef, an
 type ErrorListItem = { type: 'Query' | 'Params' | 'Body'; errors: ZodError<any> };
 
 export const sendErrors: (errors: Array<ErrorListItem>, res: Response) => void = (errors, res) => {
-  if (process.env.NODE_ENV === "dev") {
+  if (process.env.NODE_ENV === "development") {
     const errorMessage = JSON.stringify({
       status: "fail",
       errors: errors
@@ -63,7 +63,7 @@ export const sendErrors: (errors: Array<ErrorListItem>, res: Response) => void =
   }
 };
 export const sendError: (error: ErrorListItem, res: Response) => void = (error, res) => {
-  if (process.env.NODE_ENV === "dev") {
+  if (process.env.NODE_ENV === "development") {
     const errorMessage = JSON.stringify({
       status: "fail",
       errors: error
